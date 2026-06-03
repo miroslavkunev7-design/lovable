@@ -14,7 +14,8 @@ export const ADMIN_PAGE_OPTIONS = [
   { slug: 'marketing',   label: 'Маркетинг',   path: '/admin/marketing' },
   { slug: 'tasks',       label: 'Задачи',      path: '/admin/tasks' },
   { slug: 'documents',   label: 'Документи',   path: '/admin/documents' },
-  { slug: 'settings',    label: 'Настройки',   path: '/admin/settings' },
+  { slug: 'settings',     label: 'Настройки',          path: '/admin/settings' },
+  { slug: 'page-editor', label: 'Редактор на страницa', path: '/admin/page-editor' },
 ] as const
 
 export function pathnameToPageSlug(pathname: string): string {

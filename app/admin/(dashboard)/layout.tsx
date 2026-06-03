@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import '@/app/admin/admin-luxury.css'
 import AdminDashboardShell from '@/components/admin/AdminDashboardShell'
+import CrmThemeLoader from '@/components/admin/CrmThemeLoader'
 import { getSidebarBadges } from '@/lib/queries/admin-sidebar'
 import { isPathRestricted } from '@/lib/auth/pages'
 import { getBrokerRestrictions, getSession } from '@/lib/auth/session'
@@ -37,6 +38,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         style={{ background: 'linear-gradient(160deg, #5A1028 0%, #420B17 45%, #350710 100%)' }}
       />
 
+      <CrmThemeLoader />
       <AdminDashboardShell
         badges={badges}
         session={session}
