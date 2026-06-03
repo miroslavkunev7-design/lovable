@@ -1,0 +1,401 @@
+/* ═══════════════════════════════════════════════════════
+   CRM LUXURY THEME — Admin only, never touches public site
+   Design: White/ivory marble sidebar + cards
+           Bordeaux damask wallpaper background
+           Bordeaux/gold shimmer text in cards
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Design tokens ───────────────────────────────────── */
+.admin-luxury-root {
+  --crm-bordeaux:      #4E0B1F;
+  --crm-bordeaux-mid:  #6B1428;
+  --crm-bordeaux-deep: #380812;
+  --crm-gold:          #CFA847;
+  --crm-gold-light:    #E8C96B;
+  --crm-gold-dim:      rgba(207,168,71,0.38);
+  --crm-ivory:         #FAF7F2;
+  --crm-ivory-warm:    #F5EDE0;
+  --crm-ivory-dim:     rgba(250,247,242,0.88);
+  --crm-marble-vein:   rgba(207,168,71,0.08);
+}
+
+/* ─── Bordeaux MARBLE STONE Background ────────────────── */
+/* Real marble: fractal-noise turbulence warps gold veins over a
+   bordeaux stone body — organic, no geometric tiling. */
+.admin-luxury-root .admin-marble-bg {
+  background-color: #420B17 !important;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235C1129'/%3E%3Cstop offset='0.5' stop-color='%23420B17'/%3E%3Cstop offset='1' stop-color='%23350710'/%3E%3C/linearGradient%3E%3Cfilter id='warp' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009' numOctaves='5' seed='9' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='110' xChannelSelector='R' yChannelSelector='G'/%3E%3CfeGaussianBlur stdDeviation='0.5'/%3E%3C/filter%3E%3Cfilter id='cloud'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.011 0.016' numOctaves='5' seed='4'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.7 0'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='700' height='700' fill='url(%23g)'/%3E%3Crect width='700' height='700' filter='url(%23cloud)' fill='%23ffffff' opacity='0.035'/%3E%3Crect width='700' height='700' filter='url(%23cloud)' fill='%23200309' opacity='0.18'/%3E%3Cg filter='url(%23warp)' fill='none' stroke-linecap='round'%3E%3Cpath d='M-60 110 Q170 70 320 170 T720 220' stroke='rgba(207,168,71,0.5)' stroke-width='1.6'/%3E%3Cpath d='M-60 250 Q180 220 350 300 T720 330' stroke='rgba(232,201,107,0.32)' stroke-width='0.9'/%3E%3Cpath d='M-60 400 Q160 360 340 460 T720 470' stroke='rgba(207,168,71,0.42)' stroke-width='1.3'/%3E%3Cpath d='M-60 560 Q200 520 360 600 T720 610' stroke='rgba(232,201,107,0.3)' stroke-width='1'/%3E%3Cpath d='M140 -60 Q180 220 130 420 T190 760' stroke='rgba(207,168,71,0.28)' stroke-width='0.8'/%3E%3Cpath d='M500 -60 Q540 240 470 460 T540 760' stroke='rgba(232,201,107,0.26)' stroke-width='0.8'/%3E%3Cpath d='M-60 180 Q220 150 380 230 T720 280' stroke='rgba(207,168,71,0.2)' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-attachment: fixed !important;
+}
+
+/* ─── WHITE IVORY MARBLE SIDEBAR ────────────────────────── */
+.admin-luxury-root .admin-sidebar,
+.admin-luxury-root aside[class*='sidebar'] {
+  background: linear-gradient(
+    180deg,
+    #FDFAF5 0%,
+    #F8F2E8 50%,
+    #F3EBE0 100%
+  ) !important;
+  backdrop-filter: none !important;
+  border-right: 2px solid rgba(207,168,71,0.45) !important;
+  box-shadow: 4px 0 32px rgba(0,0,0,0.18), inset -1px 0 0 rgba(207,168,71,0.2) !important;
+}
+
+/* Marble vein overlay on sidebar */
+.admin-luxury-root .admin-sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      112deg,
+      transparent 0px, transparent 45px,
+      rgba(207,168,71,0.04) 45px, rgba(207,168,71,0.04) 46px
+    ),
+    repeating-linear-gradient(
+      68deg,
+      transparent 0px, transparent 70px,
+      rgba(207,168,71,0.025) 70px, rgba(207,168,71,0.025) 71px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+.admin-luxury-root .admin-sidebar > * { position: relative; z-index: 1; }
+
+/* Sidebar logo text */
+.admin-luxury-root .admin-sidebar p.text-white,
+.admin-luxury-root .admin-sidebar .leading-none p {
+  color: var(--crm-bordeaux) !important;
+  font-weight: 700;
+}
+
+/* Sidebar sub-label (НАДЕЖДА) */
+.admin-luxury-root .admin-sidebar .text-crimson-700 {
+  color: var(--crm-gold) !important;
+}
+
+/* Sidebar user name */
+.admin-luxury-root .admin-sidebar .text-white.text-xs {
+  color: var(--crm-bordeaux) !important;
+}
+.admin-luxury-root .admin-sidebar .text-\[rgba\(255\,255\,255\,0\.4\)\] {
+  color: rgba(78,11,31,0.5) !important;
+}
+
+/* Nav links — default state */
+.admin-luxury-root .admin-sidebar a.text-\[rgba\(255\,255\,255\,0\.50\)\],
+.admin-luxury-root .admin-sidebar a[class*='text-[rgba(255'] {
+  color: rgba(78,11,31,0.6) !important;
+}
+.admin-luxury-root .admin-sidebar nav a {
+  color: rgba(78,11,31,0.62) !important;
+}
+.admin-luxury-root .admin-sidebar nav a:hover {
+  color: var(--crm-bordeaux) !important;
+  background: rgba(78,11,31,0.06) !important;
+}
+
+/* Active nav item */
+.admin-luxury-root .admin-sidebar nav a[style*='border'] {
+  background: linear-gradient(135deg, rgba(78,11,31,0.1), rgba(78,11,31,0.06)) !important;
+  border-color: rgba(207,168,71,0.45) !important;
+  color: var(--crm-bordeaux) !important;
+}
+.admin-luxury-root .admin-sidebar nav a span.text-white {
+  color: var(--crm-bordeaux) !important;
+}
+.admin-luxury-root .admin-sidebar nav a span.text-crimson-700 {
+  color: var(--crm-bordeaux) !important;
+  opacity: 0.8;
+}
+
+/* Sidebar badge */
+.admin-luxury-root .admin-sidebar nav span[style*='background: #A86B3D'],
+.admin-luxury-root .admin-sidebar nav span[style*='#A86B3D'] {
+  background: var(--crm-bordeaux) !important;
+  color: var(--crm-ivory) !important;
+}
+
+/* AI button in sidebar */
+.admin-luxury-root .admin-sidebar button.text-\[rgba\(255\,255\,255\,0\.55\)\],
+.admin-luxury-root .admin-sidebar button[class*='text-[rgba(255'] {
+  color: rgba(78,11,31,0.65) !important;
+}
+.admin-luxury-root .admin-sidebar button.text-white { color: var(--crm-bordeaux) !important; }
+
+/* Status indicator */
+.admin-luxury-root .admin-sidebar-status {
+  background: rgba(207,168,71,0.08) !important;
+  border: 1px solid rgba(207,168,71,0.25) !important;
+}
+.admin-luxury-root .admin-sidebar-status-text {
+  color: rgba(78,11,31,0.6) !important;
+}
+
+/* Logout */
+.admin-luxury-root .admin-sidebar .text-\[rgba\(255\,255\,255\,0\.4\)\] {
+  color: rgba(78,11,31,0.45) !important;
+}
+
+/* ─── WHITE TOPBAR ───────────────────────────────────────── */
+.admin-luxury-root .admin-topbar,
+.admin-luxury-root header[class*='topbar'] {
+  background: rgba(253,250,245,0.97) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(207,168,71,0.3) !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.1) !important;
+}
+
+/* ─── Gold shimmer animation for headings ────────────────── */
+@keyframes crm-gold-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* ─── WHITE/GOLD MARBLE CARDS — from texture ─────────────── */
+.admin-luxury-root .admin-card,
+.admin-luxury-root [class*='AdminCard'],
+.admin-luxury-root .admin-kanban-bg {
+  background:
+    url('/images/texture-marble-white-gold.png') center / cover no-repeat !important;
+  border: 1px solid rgba(207,168,71,0.40) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 6px 28px rgba(0,0,0,0.22),
+    0 1px 0 rgba(255,255,255,0.85) inset,
+    0 0 0 1px rgba(207,168,71,0.08) inset !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Marble veining on cards */
+.admin-luxury-root .admin-card::before {
+  content: '';
+  position: absolute;
+  top: -30%; left: -10%;
+  width: 120%; height: 160%;
+  background:
+    linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(207,168,71,0.05) 28%,
+      transparent 30%,
+      rgba(255,255,255,0.08) 48%,
+      transparent 50%,
+      rgba(207,168,71,0.04) 68%,
+      transparent 70%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+.admin-luxury-root .admin-card > * { position: relative; z-index: 1; }
+
+.admin-luxury-root .admin-card:hover {
+  border-color: rgba(207,168,71,0.6) !important;
+  box-shadow:
+    0 10px 40px rgba(78,11,31,0.18),
+    0 0 20px rgba(207,168,71,0.1),
+    0 1px 0 rgba(255,255,255,0.9) inset !important;
+}
+
+/* ─── Text in cards: bordeaux/gold ──────────────────────── */
+.admin-luxury-root .admin-card h1,
+.admin-luxury-root .admin-card h2,
+.admin-luxury-root .admin-card h3,
+.admin-luxury-root .admin-card .admin-heading,
+.admin-luxury-root .admin-card .font-display {
+  background: linear-gradient(90deg, var(--crm-bordeaux) 0%, #8B1A2F 30%, var(--crm-gold) 55%, #8B1A2F 80%, var(--crm-bordeaux) 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: crm-gold-shimmer 4s linear infinite;
+}
+
+/* Page-level headings (outside cards) stay plain ivory */
+.admin-luxury-root > * > * h1,
+.admin-luxury-root .admin-scroll-main > div > h1,
+.admin-luxury-root .admin-scroll-main > div > h2 {
+  color: var(--crm-ivory) !important;
+  -webkit-text-fill-color: var(--crm-ivory) !important;
+  animation: none !important;
+  background: none !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+/* Body text in cards: bordeaux */
+.admin-luxury-root .admin-card .admin-text,
+.admin-luxury-root .admin-card p,
+.admin-luxury-root .admin-card span:not([class*='badge']):not([class*='status']),
+.admin-luxury-root .admin-card label {
+  color: var(--crm-bordeaux) !important;
+  -webkit-text-fill-color: var(--crm-bordeaux) !important;
+}
+
+/* Muted text in cards */
+.admin-luxury-root .admin-card .admin-text-muted,
+.admin-luxury-root .admin-card .admin-text-faint {
+  color: rgba(78,11,31,0.55) !important;
+  -webkit-text-fill-color: rgba(78,11,31,0.55) !important;
+}
+
+/* ─── Tables ─────────────────────────────────────────────── */
+.admin-luxury-root table {
+  border-collapse: separate;
+  border-spacing: 0 5px;
+}
+.admin-luxury-root thead th,
+.admin-luxury-root .admin-table-head {
+  color: var(--crm-bordeaux) !important;
+  font-size: 0.67rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: none !important;
+  background: transparent !important;
+  font-weight: 700;
+  opacity: 0.7;
+}
+.admin-luxury-root tbody tr {
+  background: rgba(250,247,242,0.7);
+  transition: background 0.22s ease;
+}
+.admin-luxury-root tbody tr:hover {
+  background: rgba(250,247,242,0.95) !important;
+  box-shadow: 0 2px 12px rgba(78,11,31,0.08);
+}
+.admin-luxury-root tbody td {
+  border: none !important;
+  color: var(--crm-bordeaux) !important;
+  padding: 12px 16px !important;
+}
+.admin-luxury-root tbody tr td:first-child { border-radius: 10px 0 0 10px; }
+.admin-luxury-root tbody tr td:last-child  { border-radius: 0 10px 10px 0; }
+
+/* ─── Buttons ────────────────────────────────────────────── */
+.admin-luxury-root .btn-crimson,
+.admin-luxury-root button[class*='btn-crimson'] {
+  background: linear-gradient(135deg, #5A1028 0%, #380812 100%) !important;
+  border: 1px solid rgba(207,168,71,0.55) !important;
+  color: var(--crm-ivory) !important;
+  box-shadow: 0 4px 16px rgba(78,11,31,0.3), inset 0 1px 0 rgba(207,168,71,0.2) !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: box-shadow 0.22s, transform 0.18s;
+}
+.admin-luxury-root .btn-crimson:hover {
+  box-shadow: 0 6px 24px rgba(78,11,31,0.45), 0 0 16px rgba(207,168,71,0.22) !important;
+  transform: translateY(-1px);
+}
+.admin-luxury-root .btn-ghost {
+  color: var(--crm-bordeaux) !important;
+  border-color: rgba(78,11,31,0.28) !important;
+  background: rgba(78,11,31,0.04) !important;
+}
+.admin-luxury-root .btn-ghost:hover {
+  background: rgba(78,11,31,0.09) !important;
+  border-color: rgba(78,11,31,0.45) !important;
+}
+
+/* ─── Inputs ─────────────────────────────────────────────── */
+.admin-luxury-root input,
+.admin-luxury-root select,
+.admin-luxury-root textarea,
+.admin-luxury-root .input-dark {
+  background: rgba(250,247,242,0.95) !important;
+  border: 1px solid rgba(207,168,71,0.35) !important;
+  color: var(--crm-bordeaux) !important;
+  border-radius: 10px !important;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.admin-luxury-root input:focus,
+.admin-luxury-root select:focus,
+.admin-luxury-root textarea:focus {
+  outline: none !important;
+  border-color: rgba(207,168,71,0.65) !important;
+  box-shadow: 0 0 0 3px rgba(207,168,71,0.1) !important;
+}
+.admin-luxury-root input::placeholder,
+.admin-luxury-root textarea::placeholder {
+  color: rgba(78,11,31,0.38) !important;
+}
+.admin-luxury-root select option {
+  background: #FAF7F2;
+  color: var(--crm-bordeaux);
+}
+
+/* ─── Modals ─────────────────────────────────────────────── */
+.admin-modal-backdrop {
+  background: rgba(40,6,14,0.65) !important;
+  backdrop-filter: blur(10px) !important;
+}
+.admin-modal-panel {
+  background: url('/images/texture-marble-white-gold.png') center / cover no-repeat !important;
+  border: 1px solid rgba(207,168,71,0.45) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.8) inset !important;
+}
+/* Text in modals: bordeaux */
+.admin-modal-panel h3,
+.admin-modal-panel .admin-heading { color: var(--crm-bordeaux) !important; -webkit-text-fill-color: var(--crm-bordeaux) !important; animation: none !important; background: none !important; }
+.admin-modal-panel p,
+.admin-modal-panel .admin-text { color: var(--crm-bordeaux) !important; }
+.admin-modal-panel .admin-text-muted,
+.admin-modal-panel .admin-text-faint { color: rgba(78,11,31,0.5) !important; }
+
+/* ─── Badges / status ────────────────────────────────────── */
+.admin-luxury-root [class*='badge'],
+.admin-luxury-root .status-badge {
+  background: rgba(78,11,31,0.1);
+  border: 1px solid rgba(78,11,31,0.2);
+  color: var(--crm-bordeaux);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+/* ─── Kanban cards ───────────────────────────────────────── */
+.admin-luxury-root .admin-kanban-card {
+  background: rgba(250,247,242,0.92) !important;
+  border: 1px solid rgba(207,168,71,0.22) !important;
+  border-radius: 10px;
+}
+.admin-luxury-root .admin-kanban-card:hover {
+  background: #FAF7F2 !important;
+  border-color: rgba(207,168,71,0.45) !important;
+}
+.admin-luxury-root .admin-kanban-card p { color: var(--crm-bordeaux) !important; }
+
+/* ─── Match banner inside card ───────────────────────────── */
+.admin-luxury-root .admin-card [style*='rgba(207,168,71'] a {
+  color: var(--crm-bordeaux) !important;
+}
+
+/* ─── Scrollbars ─────────────────────────────────────────── */
+.admin-luxury-root *::-webkit-scrollbar { width: 4px; height: 4px; }
+.admin-luxury-root *::-webkit-scrollbar-track { background: transparent; }
+.admin-luxury-root *::-webkit-scrollbar-thumb { background: rgba(207,168,71,0.3); border-radius: 4px; }
+.admin-luxury-root { scrollbar-color: rgba(207,168,71,0.3) transparent; }
+
+/* ─── Page headings over bordeaux bg ────────────────────── */
+.admin-luxury-root .admin-heading { color: var(--crm-ivory) !important; }
+.admin-luxury-root h1 { color: var(--crm-ivory) !important; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.admin-luxury-root .admin-text-muted { color: rgba(250,247,242,0.55) !important; }
+.admin-luxury-root .admin-text { color: var(--crm-ivory) !important; }
+.admin-luxury-root .admin-text-faint { color: rgba(250,247,242,0.35) !important; }
+
+/* ─── HR / dividers ──────────────────────────────────────── */
+.admin-luxury-root hr { border-color: rgba(207,168,71,0.2) !important; }
+
+/* ─── Selection ──────────────────────────────────────────── */
+.admin-luxury-root ::selection { background: rgba(207,168,71,0.28); color: var(--crm-bordeaux); }
+
+/* ─── VT CRM panel ───────────────────────────────────────── */
+.admin-luxury-root .vt-crm {
+  background: rgba(250,247,242,0.9);
+  border: 1px solid rgba(207,168,71,0.35);
+  border-radius: 14px;
+}

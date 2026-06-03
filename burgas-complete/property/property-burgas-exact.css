@@ -1,0 +1,238 @@
+/* Burgas property detail — mockup 3 + pd-* grid */
+
+@import '../shared/burgas-exact-tokens.css';
+@import '../city/city-burgas-exact.css';
+
+.main--property-detail {
+  min-height: 100dvh !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.property-detail-layout {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.pdb-page {
+  min-height: 100dvh;
+  background: var(--burgas-marble);
+}
+
+.pdb-hero {
+  position: relative;
+  height: clamp(300px, 40vh, 360px);
+  overflow: hidden;
+  background: #0c080a;
+}
+
+.pdb-hero__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 45%;
+}
+
+.pdb-hero__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, transparent 38%, rgba(12, 8, 10, 0.78) 100%),
+    linear-gradient(90deg, rgba(107, 0, 28, 0.32) 0%, transparent 55%);
+}
+
+.pdb-hero .cb-top {
+  position: absolute;
+  z-index: 6;
+}
+
+.pdb-hero__search {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(10px, 2vh, 18px);
+  width: min(92%, 820px);
+}
+
+.pdb-intro {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: clamp(18px, 3vw, 28px) clamp(16px, 3vw, 40px) 8px;
+}
+
+.pdb-intro__title {
+  margin: 0 0 8px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  font-weight: 700;
+  color: var(--burgas-burg);
+  line-height: 1.15;
+}
+
+.pdb-intro__loc {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: rgba(107, 0, 28, 0.65);
+}
+
+.pdb-intro__price {
+  margin: 0 0 16px;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  font-weight: 800;
+  color: var(--burgas-burg);
+}
+
+.pdb-intro__stats {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pdb-intro__stats li {
+  padding: 12px 8px;
+  text-align: center;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid var(--burgas-gold-border);
+  box-shadow: 0 4px 14px rgba(107, 0, 28, 0.06);
+}
+
+.pdb-intro__stat-label {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #a97a1f;
+  margin-bottom: 4px;
+}
+
+.pdb-intro__stats strong {
+  font-size: 13px;
+  color: var(--burgas-burg);
+}
+
+@media (max-width: 900px) {
+  .pdb-intro__stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Detail body — light marble (mockup 3) */
+.pdb-detail.property-detail-page {
+  --pd-nav: 12px;
+  --pd-foot: 28px;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  min-height: calc(100dvh - 300px);
+  background-color: var(--marble-white);
+  background-image:
+    radial-gradient(ellipse 90% 50% at 50% -8%, rgba(212, 175, 55, 0.12) 0%, transparent 55%),
+    linear-gradient(180deg, var(--warm-white) 0%, var(--marble-white) 48%, #f0ebe3 100%);
+  color: var(--pd-text, #2a0612);
+}
+
+html.light .pdb-detail.property-detail-page,
+.pdb-detail.property-detail-page {
+  --pd-bg: #faf7f2;
+  --pd-card: rgba(255, 253, 248, 0.95);
+  --pd-card-alt: #fffdf8;
+  --pd-text: #2a0612;
+  --pd-text-secondary: rgba(110, 15, 36, 0.72);
+  --pd-text-muted: rgba(110, 15, 36, 0.48);
+  --pd-accent: #6b001c;
+  --pd-gold: #cfa54a;
+  --pd-gold-light: #a97a1f;
+  --pd-border: rgba(207, 165, 74, 0.42);
+}
+
+.pdb-detail .pd-shell {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  padding-top: 20px;
+}
+
+.pdb-detail .pd-body {
+  overflow: visible;
+  grid-template-rows: auto auto;
+  gap: 14px;
+}
+
+.pdb-detail .pd-top {
+  min-height: 420px;
+  overflow: visible;
+}
+
+.pdb-detail .pd-bottom {
+  overflow: visible;
+  min-height: 200px;
+}
+
+.pdb-detail .pd-title {
+  color: var(--burgas-burg);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+}
+
+.pdb-detail .pd-price {
+  color: var(--burgas-burg);
+}
+
+.pdb-detail .pd-spec-icon {
+  color: var(--burgas-burg);
+}
+
+.pdb-detail .pd-card {
+  background: var(--pd-card);
+}
+
+.pdb-detail__top-badge {
+  flex-shrink: 0;
+  margin-bottom: 4px;
+}
+
+.pdb-head__badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #e8c878, var(--burgas-gold));
+  color: #2e0612;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.pdb-detail .collage-agent-card,
+.pdb-detail .pd-contact {
+  background: linear-gradient(165deg, rgba(127, 23, 52, 0.96), rgba(78, 11, 31, 0.98)) !important;
+  border: 1px solid var(--burgas-gold-border) !important;
+  color: #fff !important;
+}
+
+.pdb-detail .pd-contact h3,
+.pdb-detail .pd-contact p,
+.pdb-detail .pd-contact label {
+  color: rgba(255, 248, 230, 0.92) !important;
+}
+
+@media (max-width: 1100px) {
+  .pdb-detail .pd-top {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .pdb-detail .pd-bottom {
+    grid-template-columns: 1fr;
+  }
+}
