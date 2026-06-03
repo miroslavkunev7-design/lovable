@@ -9,8 +9,16 @@ const SECTIONS = [
     title: 'Профил',
     icon: '👤',
     items: [
-      { label: 'Мой профил', href: '/admin/profile' },
+      { label: 'Мой профил & Тема', href: '/admin/profile' },
       { label: 'Настройки на Милена', href: '/admin/settings#milena' },
+    ],
+  },
+  {
+    title: 'Дизайн',
+    icon: '🎨',
+    items: [
+      { label: 'Редактор на страници', href: '/admin/page-editor' },
+      { label: 'Цветова схема на CRM', href: '/admin/profile' },
     ],
   },
   {
