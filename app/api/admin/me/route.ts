@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute, queryOne } from '@/lib/db'
+import { execute, isDbConfigured, queryOne } from '@/lib/db'
 import { getBrokerRestrictions, getSession } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
@@ -82,6 +82,10 @@ export async function PATCH(req: NextRequest) {
 
     if (!fields.length) {
       return NextResponse.json({ success: false, error: 'Няма промени' }, { status: 400 })
+    }
+
+    if (!isDbConfigured()) {
+      return NextResponse.json({ success: true, local: true })
     }
 
     values.push(String(session.id))

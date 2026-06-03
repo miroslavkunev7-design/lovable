@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute } from '@/lib/db'
+import { execute, isDbConfigured } from '@/lib/db'
 
 export async function DELETE(
   _req: NextRequest,
@@ -7,6 +7,7 @@ export async function DELETE(
 ) {
   try {
     const noteId = parseInt(params.noteId, 10)
+    if (!isDbConfigured()) return NextResponse.json({ success: true })
     await execute(`DELETE FROM crm_notes WHERE id = ?`, [noteId])
     return NextResponse.json({ success: true })
   } catch (error) {

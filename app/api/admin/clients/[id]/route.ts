@@ -1,54 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute } from '@/lib/db'
+import { execute, isDbConfigured } from '@/lib/db'
 import { toHostClientStatus } from '@/lib/db/mappers'
+import { updateLocalClient, deleteLocalClient } from '@/lib/local-store/clients'
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await req.json()
     const id = parseInt(params.id, 10)
+
+    if (!isDbConfigured() || id >= 900_001) {
+      await updateLocalClient(id, {
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        status: body.status,
+        budget_min: body.budget_min ? Number(body.budget_min) : undefined,
+        budget_max: body.budget_max ? Number(body.budget_max) : undefined,
+      })
+      return NextResponse.json({ success: true })
+    }
+
     const fields: string[] = []
     const values: (string | number | null)[] = []
 
-    if (body.name !== undefined) {
-      fields.push('name = ?')
-      values.push(body.name)
-    }
-    if (body.email !== undefined) {
-      fields.push('email = ?')
-      values.push(body.email)
-    }
-    if (body.phone !== undefined) {
-      fields.push('phone = ?')
-      values.push(body.phone || null)
-    }
-    if (body.budget_min !== undefined) {
-      fields.push('budget_min = ?')
-      values.push(body.budget_min ? Number(body.budget_min) : null)
-    }
-    if (body.budget_max !== undefined) {
-      fields.push('budget_max = ?')
-      values.push(body.budget_max ? Number(body.budget_max) : null)
-    }
-    if (body.status !== undefined) {
-      fields.push('status = ?')
-      values.push(toHostClientStatus(body.status))
-    }
-    if (body.assigned_agent_id !== undefined) {
-      fields.push('agent_id = ?')
-      values.push(body.assigned_agent_id || null)
-    }
-    if (body.city !== undefined) {
-      fields.push('city = ?')
-      values.push(body.city || null)
-    }
-    if (body.property_type !== undefined) {
-      fields.push('property_type = ?')
-      values.push(body.property_type || null)
-    }
-    if (body.search_description !== undefined) {
-      fields.push('search_description = ?')
-      values.push(body.search_description || null)
-    }
+    if (body.name !== undefined)        { fields.push('name = ?');             values.push(body.name) }
+    if (body.email !== undefined)       { fields.push('email = ?');            values.push(body.email) }
+    if (body.phone !== undefined)       { fields.push('phone = ?');            values.push(body.phone || null) }
+    if (body.budget_min !== undefined)  { fields.push('budget_min = ?');       values.push(body.budget_min ? Number(body.budget_min) : null) }
+    if (body.budget_max !== undefined)  { fields.push('budget_max = ?');       values.push(body.budget_max ? Number(body.budget_max) : null) }
+    if (body.status !== undefined)      { fields.push('status = ?');           values.push(toHostClientStatus(body.status)) }
+    if (body.assigned_agent_id !== undefined) { fields.push('agent_id = ?'); values.push(body.assigned_agent_id || null) }
+    if (body.city !== undefined)        { fields.push('city = ?');             values.push(body.city || null) }
+    if (body.property_type !== undefined) { fields.push('property_type = ?'); values.push(body.property_type || null) }
+    if (body.search_description !== undefined) { fields.push('search_description = ?'); values.push(body.search_description || null) }
 
     if (fields.length) {
       values.push(id)
@@ -68,6 +52,12 @@ export async function DELETE(
 ) {
   try {
     const id = parseInt(params.id, 10)
+
+    if (!isDbConfigured() || id >= 900_001) {
+      await deleteLocalClient(id)
+      return NextResponse.json({ success: true })
+    }
+
     try {
       await execute(`DELETE FROM crm_notes WHERE client_id = ?`, [id])
     } catch { /* optional */ }

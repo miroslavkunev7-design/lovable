@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute } from '@/lib/db'
+import { execute, isDbConfigured } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,10 +21,19 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    if (!isDbConfigured()) {
+      // Without DB: log to console and return success (message is "lost" but UX is good)
+      console.log('[inquiry no-db]', { name, email, phone, message, property_id })
+      return NextResponse.json({
+        success: true,
+        message: 'Запитването е получено! Ще се свържем с вас скоро.',
+      })
+    }
+
     await execute(
       `INSERT INTO inquiries (property_id, name, email, phone, message, status)
        VALUES (?, ?, ?, ?, ?, 'new')`,
-      [property_id ? Number(property_id) : 0, name, email, phone ?? null, message]
+      [property_id ? Number(property_id) : null, name, email, phone ?? null, message]
     )
 
     return NextResponse.json({

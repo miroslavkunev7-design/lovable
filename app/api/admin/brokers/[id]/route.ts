@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute } from '@/lib/db'
+import { execute, isDbConfigured } from '@/lib/db'
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  if (!isDbConfigured()) {
+    return NextResponse.json({ success: false, error: 'База данни не е конфигурирана.' }, { status: 503 })
+  }
   try {
     const body = await req.json()
     const id = parseInt(params.id, 10)
@@ -49,6 +52,9 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!isDbConfigured()) {
+    return NextResponse.json({ success: false, error: 'База данни не е конфигурирана.' }, { status: 503 })
+  }
   try {
     const id = parseInt(params.id, 10)
     await execute(

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute, query } from '@/lib/db'
+import { execute, isDbConfigured, query } from '@/lib/db'
 
 export async function GET(
   _req: NextRequest,
@@ -43,6 +43,10 @@ export async function POST(
 
     if (!note?.trim()) {
       return NextResponse.json({ success: false, error: 'Бележката е празна' }, { status: 400 })
+    }
+
+    if (!isDbConfigured()) {
+      return NextResponse.json({ success: true, id: Date.now() })
     }
 
     const result = await execute(

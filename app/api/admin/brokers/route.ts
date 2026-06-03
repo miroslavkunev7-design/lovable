@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute } from '@/lib/db'
+import { execute, isDbConfigured } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
+  if (!isDbConfigured()) {
+    return NextResponse.json({ success: false, error: 'База данни не е конфигурирана.' }, { status: 503 })
+  }
   try {
     const { name, email, phone, password } = await req.json()
     if (!name?.trim() || !email?.trim()) {

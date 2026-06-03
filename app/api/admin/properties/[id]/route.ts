@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute, query, queryOne } from '@/lib/db'
+import { execute, isDbConfigured, query, queryOne } from '@/lib/db'
 import { toHostPropertyStatus, mapPropertyStatus } from '@/lib/db/mappers'
 import { resolveMediaUrl } from '@/lib/upload-bridge'
-import { deleteLocalProperty } from '@/lib/local-store/properties'
+import { deleteLocalProperty, getLocalProperty, localToPropertyRow } from '@/lib/local-store/properties'
 
 function numOrNull(v: unknown): number | null {
   if (v === '' || v === null || v === undefined) return null
@@ -33,6 +33,35 @@ export async function GET(
 ) {
   try {
     const id = parseInt(params.id, 10)
+
+    // Serve local demo properties (id >= 900001) or when DB is unavailable
+    if (id >= 900_001 || !isDbConfigured()) {
+      const local = await getLocalProperty(id)
+      if (!local) {
+        return NextResponse.json({ success: false, error: 'Имотът не е намерен' }, { status: 404 })
+      }
+      return NextResponse.json({
+        success: true,
+        property: {
+          id: local.id,
+          title: local.title,
+          description: local.description ?? '',
+          price_eur: local.price,
+          area_sqm: local.area,
+          city: local.city,
+          quarter: local.quarter,
+          property_type: local.property_type,
+          status: 'active',
+          bedrooms: local.bedrooms ?? null,
+          bathrooms: local.bathrooms ?? null,
+          floor: null,
+          total_floors: null,
+          main_image: local.main_image ?? null,
+          images: local.images ?? [],
+        },
+      })
+    }
+
     const row = await queryOne<Record<string, unknown>>(`
       SELECT p.*, c.slug AS city_slug, q.slug AS quarter_slug
       FROM properties p
@@ -85,6 +114,9 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  if (!isDbConfigured()) {
+    return NextResponse.json({ success: false, error: 'База данни не е конфигурирана.' }, { status: 503 })
+  }
   try {
     const id = parseInt(params.id, 10)
     const body = await req.json()

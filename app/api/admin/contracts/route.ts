@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { execute } from '@/lib/db'
+import { execute, isDbConfigured } from '@/lib/db'
 
 /** Contracts use the `appointments` table on host (no contracts table) */
 export async function POST(req: NextRequest) {
+  if (!isDbConfigured()) {
+    return NextResponse.json({ success: false, error: 'База данни не е конфигурирана. Свържи Supabase в Vercel.' }, { status: 503 })
+  }
+
   try {
     const { client_name, property_title, type, value } = await req.json()
 
-    const result = await execute(`
-      INSERT INTO appointments (appointment_date, status, notes)
-      VALUES (CURDATE(), 'pending', ?)`,
+    const result = await execute(
+      `INSERT INTO appointments (appointment_date, status, notes)
+       VALUES (CURRENT_DATE, 'pending', ?)`,
       [`${type} | ${client_name} | ${property_title} | €${value ?? 0}`]
     )
 

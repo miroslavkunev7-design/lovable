@@ -24,8 +24,8 @@ export async function POST(req: NextRequest) {
       FROM crm_clients c
       LEFT JOIN users u ON u.id = c.agent_id
       WHERE c.status = 'active'
-        AND (c.preferred_city IS NULL OR c.preferred_city = '' OR c.preferred_city = ? OR LOWER(c.preferred_city) = LOWER(?))
-        AND (c.preferred_quarter IS NULL OR c.preferred_quarter = '' OR c.preferred_quarter = ? OR LOWER(c.preferred_quarter) = LOWER(?))
+        AND (c.city IS NULL OR c.city = '' OR c.city = ? OR LOWER(c.city) = LOWER(?))
+        AND (? = '' OR ? = '')
         AND (c.budget_min IS NULL OR c.budget_min <= ?)
         AND (c.budget_max IS NULL OR c.budget_max >= ?)
       ORDER BY c.created_at DESC
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       preferred_type: type,
       budget_min: r.budget_min,
       budget_max: r.budget_max,
-      city_name: r.preferred_city ?? city?.name ?? '',
+      city_name: (r.city as string) ?? city?.name ?? '',
       preferred_bedrooms: bedrooms,
       assigned_agent_name: r.assigned_agent_name,
       status: mapClientStatus(String(r.status ?? 'active')),

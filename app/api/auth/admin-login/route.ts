@@ -30,7 +30,10 @@ export async function POST(req: NextRequest) {
     }
 
     const MASTER_EMAIL    = process.env.ADMIN_EMAIL    ?? 'agenciq_nadejdi@abv.bg'
-    const MASTER_PASSWORD = process.env.ADMIN_PASSWORD ?? 'nadia740608!'
+    const MASTER_PASSWORD = process.env.ADMIN_PASSWORD ?? ''
+    if (!MASTER_PASSWORD) {
+      return NextResponse.json({ success: false, error: 'ADMIN_PASSWORD не е зададен в environment variables.' }, { status: 503 })
+    }
 
     if (email === MASTER_EMAIL && password === MASTER_PASSWORD) {
       const token = createSessionToken(1, 'admin')

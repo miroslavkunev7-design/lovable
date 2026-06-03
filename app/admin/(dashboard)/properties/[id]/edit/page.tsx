@@ -1,26 +1,48 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import EditPropertyForm from '@/components/admin/EditPropertyForm'
-import { queryOne } from '@/lib/db'
+import { queryOne, isDbConfigured } from '@/lib/db'
+import { getLocalProperty } from '@/lib/local-store/properties'
 
 export const metadata: Metadata = { title: 'Редакция на имот' }
 export const dynamic = 'force-dynamic'
 
-async function getProperty(id: number) {
+interface PropertyRow {
+  id: number
+  title: string
+  description: string | null
+  price: number
+  area: number
+  city: string
+  quarter: string
+  property_type: string
+  status: string
+  bedrooms: number | null
+  bathrooms: number | null
+}
+
+async function getProperty(id: number): Promise<PropertyRow | null> {
+  // Local demo properties or no DB
+  if (id >= 900_001 || !isDbConfigured()) {
+    const local = await getLocalProperty(id)
+    if (!local) return null
+    return {
+      id: local.id,
+      title: local.title,
+      description: local.description ?? null,
+      price: local.price,
+      area: local.area,
+      city: local.city,
+      quarter: local.quarter,
+      property_type: local.property_type,
+      status: 'active',
+      bedrooms: local.bedrooms ?? null,
+      bathrooms: local.bathrooms ?? null,
+    }
+  }
+
   try {
-    return await queryOne<{
-      id: number
-      title: string
-      description: string | null
-      price: number
-      area: number
-      city: string
-      quarter: string
-      property_type: string
-      status: string
-      bedrooms: number | null
-      bathrooms: number | null
-    }>(`SELECT * FROM properties WHERE id = ?`, [id])
+    return await queryOne<PropertyRow>(`SELECT * FROM properties WHERE id = ?`, [id])
   } catch {
     return null
   }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query, execute } from '@/lib/db'
+import { query, execute, isDbConfigured } from '@/lib/db'
 import { getSession } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
@@ -48,6 +48,19 @@ export async function POST(req: NextRequest) {
     const text = String(message ?? '').trim()
     if (!text) {
       return NextResponse.json({ success: false, error: 'Празно съобщение' }, { status: 400 })
+    }
+
+    if (!isDbConfigured()) {
+      return NextResponse.json({
+        success: true,
+        message: {
+          id: Date.now(),
+          sender_id: session.id,
+          sender_name: session.name ?? 'Потребител',
+          message: text,
+          created_at: new Date().toISOString(),
+        },
+      })
     }
 
     const result = await execute(

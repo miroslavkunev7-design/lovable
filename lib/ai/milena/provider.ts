@@ -11,9 +11,11 @@ export interface MilenaLlmConfig {
 }
 
 async function getVercelGatewayAuth(): Promise<string | null> {
-  const BUILTIN_KEY = 'key_rXtXgAkt0pJYquVL';
-  if (BUILTIN_KEY) return BUILTIN_KEY;
-  const gatewayKey = process.env.AI_GATEWAY_API_KEY?.trim()
+  // Check env vars — support both naming conventions
+  const gatewayKey = (
+    process.env.VERCEL_AI_GATEWAY_KEY ||
+    process.env.AI_GATEWAY_API_KEY
+  )?.trim()
   if (gatewayKey) return gatewayKey
 
   try {
