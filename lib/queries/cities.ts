@@ -1,9 +1,15 @@
-import { query, queryOne } from '@/lib/db'
-import { mapCityRow, mapQuarterRow, PROPERTY_LOCATION_JOINS } from '@/lib/db/mappers'
+import { isDbConfigured, query, queryOne } from '@/lib/db'
+import { mapCityRow, mapQuarterRow } from '@/lib/db/mappers'
+import { FALLBACK_CITIES, QUARTERS_BY_CITY } from '@/lib/data/fallback'
+import { countLocalPropertiesForQuarter } from '@/lib/properties/merge-local'
 import type { City, Quarter } from '@/types'
 
 /** All cities with property/quarter counts (InfinityFree host schema) */
 export async function getAllCities(): Promise<City[]> {
+  if (!isDbConfigured()) {
+    return FALLBACK_CITIES
+  }
+
   const rows = await query<Record<string, unknown>>(`
     SELECT
       c.*,
@@ -15,11 +21,17 @@ export async function getAllCities(): Promise<City[]> {
     GROUP BY c.id
     ORDER BY c.id ASC, c.name ASC
   `)
+
+  if (!rows.length) return FALLBACK_CITIES
   return rows.map(mapCityRow)
 }
 
 /** Single city by slug */
 export async function getCityBySlug(slug: string): Promise<City | null> {
+  if (!isDbConfigured()) {
+    return FALLBACK_CITIES.find(c => c.slug === slug) ?? null
+  }
+
   const row = await queryOne<Record<string, unknown>>(
     `SELECT
       c.*,
@@ -32,11 +44,31 @@ export async function getCityBySlug(slug: string): Promise<City | null> {
      GROUP BY c.id`,
     [slug]
   )
-  return row ? mapCityRow(row) : null
+
+  if (!row) return FALLBACK_CITIES.find(c => c.slug === slug) ?? null
+  return mapCityRow(row)
 }
 
 /** All quarters for a city, with property counts */
 export async function getQuartersByCity(citySlug: string): Promise<Quarter[]> {
+  if (!isDbConfigured()) {
+    const fallbackCity = FALLBACK_CITIES.find(c => c.slug === citySlug)
+    const quarters = QUARTERS_BY_CITY[citySlug] ?? []
+    return Promise.all(quarters.map(async (q) => ({
+      id: q.id,
+      city_id: fallbackCity?.id ?? 0,
+      city_slug: citySlug,
+      city_name: fallbackCity?.name ?? '',
+      name: q.name,
+      slug: q.slug,
+      description: null,
+      image_url: null,
+      population: null,
+      area_km2: null,
+      property_count: await countLocalPropertiesForQuarter(citySlug, q.slug),
+    } as Quarter)))
+  }
+
   const rows = await query<Record<string, unknown>>(`
     SELECT
       q.*,
