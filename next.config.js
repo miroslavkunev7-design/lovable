@@ -15,6 +15,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Ensure data/ JSON files are included in Vercel serverless function bundles
+  outputFileTracingIncludes: {
+    '/**': ['./data/**'],
+  },
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
   images: {
     remotePatterns: [

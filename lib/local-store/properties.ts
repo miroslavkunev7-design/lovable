@@ -1,8 +1,11 @@
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const FILE_PATH = path.join(DATA_DIR, 'local-properties.json')
+// On Vercel the project root is read-only; use /tmp for new writes.
+// Seed data from data/local-properties.json is always available (included via outputFileTracingIncludes).
+const IS_VERCEL = Boolean(process.env.VERCEL)
+const SEED_PATH  = path.join(process.cwd(), 'data', 'local-properties.json')
+const WRITE_PATH = IS_VERCEL ? '/tmp/local-properties.json' : SEED_PATH
 
 export type StoredProperty = {
   id: number
@@ -31,18 +34,35 @@ export type StoredProperty = {
   updated_at: string
 }
 
-async function readStore(): Promise<StoredProperty[]> {
+async function readJson(filePath: string): Promise<StoredProperty[]> {
   try {
-    const raw = await readFile(FILE_PATH, 'utf-8')
+    const raw = await readFile(filePath, 'utf-8')
     return JSON.parse(raw) as StoredProperty[]
   } catch {
     return []
   }
 }
 
+async function readStore(): Promise<StoredProperty[]> {
+  if (!IS_VERCEL) return readJson(SEED_PATH)
+
+  // On Vercel: merge seed data + runtime additions (from /tmp), deduplicate by id
+  const [seed, runtime] = await Promise.all([readJson(SEED_PATH), readJson(WRITE_PATH)])
+  const byId = new Map<number, StoredProperty>()
+  for (const p of seed)    byId.set(p.id, p)
+  for (const p of runtime) byId.set(p.id, p) // runtime overrides seed
+  return Array.from(byId.values()).sort((a, b) => b.id - a.id)
+}
+
 async function writeStore(items: StoredProperty[]): Promise<void> {
-  await mkdir(DATA_DIR, { recursive: true })
-  await writeFile(FILE_PATH, JSON.stringify(items, null, 2), 'utf-8')
+  if (IS_VERCEL) {
+    // On Vercel: only persist new/edited entries (id >= 900001) in /tmp
+    const runtimeItems = items.filter(p => p.id >= 900_001)
+    await writeFile(WRITE_PATH, JSON.stringify(runtimeItems, null, 2), 'utf-8')
+  } else {
+    await mkdir(path.dirname(SEED_PATH), { recursive: true })
+    await writeFile(SEED_PATH, JSON.stringify(items, null, 2), 'utf-8')
+  }
 }
 
 export async function listLocalProperties(): Promise<StoredProperty[]> {

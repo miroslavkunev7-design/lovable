@@ -2,8 +2,10 @@ import { readFile, writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import type { LeadStatus, MarketplaceLead } from '@/lib/marketplace/types'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const FILE_PATH = path.join(DATA_DIR, 'local-crm-leads-queue.json')
+const IS_VERCEL = Boolean(process.env.VERCEL)
+const FILE_PATH = IS_VERCEL
+  ? '/tmp/local-crm-leads-queue.json'
+  : path.join(process.cwd(), 'data', 'local-crm-leads-queue.json')
 
 type StoredLead = Omit<MarketplaceLead, 'images'> & { images: string[] }
 
@@ -17,7 +19,7 @@ async function readStore(): Promise<StoredLead[]> {
 }
 
 async function writeStore(items: StoredLead[]): Promise<void> {
-  await mkdir(DATA_DIR, { recursive: true })
+  if (!IS_VERCEL) await mkdir(path.dirname(FILE_PATH), { recursive: true })
   await writeFile(FILE_PATH, JSON.stringify(items, null, 2), 'utf-8')
 }
 

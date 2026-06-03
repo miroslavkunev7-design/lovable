@@ -1,8 +1,10 @@
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
-const DATA_DIR = path.join(process.cwd(), 'data')
-const FILE_PATH = path.join(DATA_DIR, 'local-crm-clients.json')
+const IS_VERCEL = Boolean(process.env.VERCEL)
+const FILE_PATH = IS_VERCEL
+  ? '/tmp/local-crm-clients.json'
+  : path.join(process.cwd(), 'data', 'local-crm-clients.json')
 
 export type StoredClient = {
   id: number
@@ -26,7 +28,9 @@ async function readStore(): Promise<StoredClient[]> {
 }
 
 async function writeStore(items: StoredClient[]): Promise<void> {
-  await mkdir(DATA_DIR, { recursive: true })
+  if (!IS_VERCEL) {
+    await mkdir(path.dirname(FILE_PATH), { recursive: true })
+  }
   await writeFile(FILE_PATH, JSON.stringify(items, null, 2), 'utf-8')
 }
 
